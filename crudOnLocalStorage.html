@@ -35,7 +35,25 @@ function update_value(){
 		message:"Are you sure?",
 		callback: function(result){ /* your callback code */ 
 			if(result==true){
-
+				var insertData=getFormParams();
+				console.log('nueva data: '+JSON.stringify(insertData));
+				var tempData=[];
+				var flag=false;
+				for(var i=0;i<localData.data.length;i++){
+					if(localData.data[i][0]==insertData[0]){
+						tempData.push(insertData);
+						flag=true;
+						console.log('cambio realizado');
+					}else{
+						tempData.push(localData.data[i]);
+					}
+				}
+				if(!flag){
+					tempData.push(insertData);
+					console.log('nuevo registro incorporado');
+				} 
+				localData.data=tempData;
+				read_value();
 			}
 		}
 	});
@@ -52,7 +70,20 @@ function delete_value(){
 		message:"Are you sure to delete record?",
 		callback: function(result){ /* your callback code */ 
 			if(result==true){
-
+				var deleteData=getFormParams();
+				console.log('data a borrar: '+JSON.stringify(deleteData));
+				var tempData=[];
+				var flag=false;
+				for(var i=0;i<localData.data.length;i++){
+					if(localData.data[i][0]==deleteData[0]){
+						flag=true;
+						console.log('registro borrado');
+					}else{
+						tempData.push(localData.data[i]);
+					}
+				}
+				localData.data=tempData;
+				read_value();
 			}
 		}
 	});
@@ -97,10 +128,20 @@ function hideEditIcons(){
 
 function getFormParams(){
 	var param=[];
-	for(var i=0; i<f.data[0].length; i++) {
+	for(var i=0; i<localData.data[0].length; i++) {
 		param.push($("#input"+i).val());
 	}
+	if(param[0]=="") param[0]=maxId();
 	return param
+}
+
+function maxId(){
+	var maxId=0;
+	for(var i=0; i<localData.data.length; i++) {
+		if(localData.data[i][0]>maxId) maxId=localData.data[i][0];
+	}
+	maxId+=1;
+	return maxId	
 }
 
 function createTable(title,data){
@@ -129,34 +170,28 @@ function createForm(title,data){
 $(document).ready(function() {
 	read_value();
 	$("#formData").hide();
-
-$('[data-toggle="tooltip"]').tooltip();  //<-- inicializa los tooltips
-
-$('#buttonResetValues').click(
-	function(){
-		resetInputs();
-	}
-	);
-
-$('#buttonList').click(
-	function(){
-		$("#formData").hide();
-		$("#showData").show();
-	}
-	);        
-
-$('#buttonSave').click(
-	function(){
-		update_value();
-	}
-	);
-
-$('#buttonDelete').click(
-	function(){
-		delete_value();
-	}
-	);
-
+	$('[data-toggle="tooltip"]').tooltip();  //<-- inicializa los tooltips
+	$('#buttonResetValues').click(
+		function(){
+			resetInputs();
+		}
+		);
+	$('#buttonList').click(
+		function(){
+			$("#formData").hide();
+			$("#showData").show();
+		}
+		);        
+	$('#buttonSave').click(
+		function(){
+			update_value();
+		}
+		);
+	$('#buttonDelete').click(
+		function(){
+			delete_value();
+		}
+		);
 });
 
 </script>

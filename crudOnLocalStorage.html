@@ -12,12 +12,9 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
 	<script>
-//var script_url = "https://script.google.com/macros/s/AKfycbyE8Esbk1efvYoCdIe0rOVNdtMLJWOCJmcRaNkvPALOMLTH0yUy/exec";
-//var script_url = "https://script.google.com/macros/s/AKfycbxbfDhBc3QU__aFBNtc8xDsZ08rGkSceweHpzyKLUid/dev";
-//var database   = "1DAWu8w996rjbFvF5oj_RUfRn3npNKMVTktB1tuBBOFE";
-//var table      = "CLIENTES";
-
-var localData  = {
+var localData=localStorage.getItem("localData");
+if(localData==null){
+	var localData  = {
 	spreadsheet:"CRUD on LocalStorage",
 	sheet:"CLIENTES",
 	data:[
@@ -26,8 +23,10 @@ var localData  = {
 		[2,"","EDIFICIO EL TOPITO","SAN BERNARDINO","","","jacktepper@gmail.com","JACK TEPPER"]
 		]
 	};
-
-var f; //LA VARIALE GLOBAL que contiene todos los parámetros
+	localStorage.setItem("localData", JSON.stringify(localData));
+}else{
+	localData=JSON.parse(localData);
+}
 
 function update_value(){
 	bootbox.confirm({
@@ -89,9 +88,7 @@ function delete_value(){
 	});
 }
 
-
 function displayData() {
-	$("#loader").hide();
 	$("#tableData").html(createTable(localData.spreadsheet+" : "+localData.sheet,localData.data));
 	$("#newForm").html(createForm(localData.spreadsheet+" : "+localData.sheet,localData.data));
 	$("#formData").hide();
@@ -99,6 +96,7 @@ function displayData() {
 	$("#loader").hide();
 	resetInputs();
 	hideEditIcons();
+	localStorage.setItem("localData", JSON.stringify(localData));
 }
 
 function setForEdit(row){
@@ -199,7 +197,7 @@ $(document).ready(function() {
 <body>
 	<div class="container">
 		<div class="jumbotron">
-			<h2>CRUD OPERATION ON LOCAL STORAGE BROWSER TABLE</h2>
+			<h2>CRUD OPERATION ON BROWSER'S LOCAL STORAGE MINI-DATABASE</h2>
 			<h6>This is a simple application, You can develop your own logic based on your requirements</h6>
 		</div>
 
@@ -223,7 +221,6 @@ $(document).ready(function() {
 				</div>
 				<form>
 				</form>
-				<!--<script>$("#formData").hide();</script>-->
 				<div id="newForm"></div>
 
 			</div>

@@ -12,6 +12,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
 	<script>
+var tablePointer=1;
 var localData=localStorage.getItem("localData");
 if(localData==null){
 	var localData  = {
@@ -23,7 +24,13 @@ if(localData==null){
 						["ID","RIF","RAZON SOCIAL","DIRECCION","TELEFONO PRINCIPAL","TELEFONO ALTERNATIVO","EMAIL","PERSONA CONTACTO"],
 						[1,"V-9972276","EDMONDO FABIO FASANO","CHACAO","0424-153-5996","","edmundofasano@gmail.com","EDMONDO FASANO"],
 						[2,"","EDIFICIO EL TOPITO","SAN BERNARDINO","","","jacktepper@gmail.com","JACK TEPPER"]
-						]
+					]
+				},
+				{
+					name:"PRODUCTOS",
+					data:[
+						["ID","NOMBRE","CODIGO","UPC","DESCRIPCION"]
+					]
 				}
 			]
 		};
@@ -43,20 +50,20 @@ function update_value(){
 				var insertData=getFormParams();
 				var tempData=[];
 				var flag=false;
-				for(var i=0;i<localData.table[0].data.length;i++){
-					if(localData.table[0].data[i][0]==insertData[0]){
+				for(var i=0;i<localData.table[tablePointer].data.length;i++){
+					if(localData.table[tablePointer].data[i][0]==insertData[0]){
 						tempData.push(insertData);
 						flag=true;
 						console.log('cambio realizado');
 					}else{
-						tempData.push(localData.table[0].data[i]);
+						tempData.push(localData.table[tablePointer].data[i]);
 					}
 				}
 				if(!flag){
 					tempData.push(insertData);
 					console.log('nuevo registro incorporado');
 				} 
-				localData.table[0].data=tempData;
+				localData.table[tablePointer].data=tempData;
 				read_value();
 			}
 		}
@@ -78,15 +85,15 @@ function delete_value(){
 				console.log('data a borrar: '+JSON.stringify(deleteData));
 				var tempData=[];
 				var flag=false;
-				for(var i=0;i<localData.table[0].data.length;i++){
-					if(localData.table[0].data[i][0]==deleteData[0]){
+				for(var i=0;i<localData.table[tablePointer].data.length;i++){
+					if(localData.table[tablePointer].data[i][0]==deleteData[0]){
 						flag=true;
 						console.log('registro borrado');
 					}else{
-						tempData.push(localData.table[0].data[i]);
+						tempData.push(localData.table[tablePointer].data[i]);
 					}
 				}
-				localData.table[0].data=tempData;
+				localData.table[tablePointer].data=tempData;
 				read_value();
 			}
 		}
@@ -94,8 +101,8 @@ function delete_value(){
 }
 
 function displayData() {
-	$("#tableData").html(createTable(localData.database+" : "+localData.table[0].name,localData.table[0].data));
-	$("#newForm").html(createForm(localData.database+" : "+localData.table[0].name,localData.table[0].data));
+	$("#tableData").html(createTable(localData.database+" : "+localData.table[tablePointer].name,localData.table[tablePointer].data));
+	$("#newForm").html(createForm(localData.database+" : "+localData.table[tablePointer].name,localData.table[tablePointer].data));
 	$("#formData").hide();
 	$("#showData").show();
 	$("#loader").hide();
@@ -105,8 +112,8 @@ function displayData() {
 }
 
 function setForEdit(row){
-	for(i=0; i<localData.table[0].data[0].length; i++) {
-		$("#input"+i).val(localData.table[0].data[row][i]);
+	for(i=0; i<localData.table[tablePointer].data[0].length; i++) {
+		$("#input"+i).val(localData.table[tablePointer].data[row][i]);
 	}
 	$("#formData").show();
 	$("#showData").hide();
@@ -131,7 +138,7 @@ function hideEditIcons(){
 
 function getFormParams(){
 	var param=[];
-	for(var i=0; i<localData.table[0].data[0].length; i++) {
+	for(var i=0; i<localData.table[tablePointer].data[0].length; i++) {
 		param.push($("#input"+i).val());
 	}
 	if(param[0]=="") param[0]=maxId();
@@ -140,8 +147,8 @@ function getFormParams(){
 
 function maxId(){
 	var maxId=0;
-	for(var i=0; i<localData.table[0].data.length; i++) {
-		if(localData.table[0].data[i][0]*1>maxId) maxId=localData.table[0].data[i][0]*1;
+	for(var i=0; i<localData.table[tablePointer].data.length; i++) {
+		if(localData.table[tablePointer].data[i][0]*1>maxId) maxId=localData.table[tablePointer].data[i][0]*1;
 	}
 	maxId+=1;
 	return maxId	

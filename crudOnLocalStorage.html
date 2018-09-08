@@ -35,7 +35,6 @@ function update_value(){
 		callback: function(result){ /* your callback code */ 
 			if(result==true){
 				var insertData=getFormParams();
-				console.log('nueva data: '+JSON.stringify(insertData));
 				var tempData=[];
 				var flag=false;
 				for(var i=0;i<localData.data.length;i++){
@@ -136,14 +135,14 @@ function getFormParams(){
 function maxId(){
 	var maxId=0;
 	for(var i=0; i<localData.data.length; i++) {
-		if(localData.data[i][0]>maxId) maxId=localData.data[i][0];
+		if(localData.data[i][0]*1>maxId) maxId=localData.data[i][0]*1;
 	}
 	maxId+=1;
 	return maxId	
 }
 
 function createTable(title,data){
-	var tb = "<table class='table table-hover table-condensed table-bordered'><caption><h3>"+title+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='color: #32CD32'></span></td>";
+	var tb = "<div class='table-responsive'><table class='table table-hover table-condensed table-bordered'><caption><h3>"+title+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='color: #32CD32'></span></td>";
 	for(i=0; i<data[0].length; i++) tb += "<td><b>"+data[0][i]+"</b></td>";
 		tb+="<tr></thead>";
 	for (i = 1; i < data.length; i++) {
@@ -151,7 +150,7 @@ function createTable(title,data){
 		for(j=0;j<data[0].length;j++) tb+='<td>'+data[i][j]+'</td>';
 			tb+='</tr>';
 	}
-	tb += "</table>";
+	tb += "</table></div>";
 	tb += '<div align="right"><a href="#" data-toggle="tooltip" title="New Record" data-placement="bottom"><span class="glyphicon glyphicon-plus-sign" onclick="newRecord()" style="font-size:40px;color: #32CD32"></span></a></div><br>';
 	return tb;
 }

@@ -15,42 +15,48 @@
 var localData=localStorage.getItem("localData");
 if(localData==null){
 	var localData  = {
-	spreadsheet:"CRUD on LocalStorage",
-	sheet:"CLIENTES",
-	data:[
-		["ID","RIF","RAZON SOCIAL","DIRECCION","TELEFONO PRINCIPAL","TELEFONO ALTERNATIVO","EMAIL","PERSONA CONTACTO"],
-		[1,"V-9972276","EDMONDO FABIO FASANO","CHACAO","0424-153-5996","","edmundofasano@gmail.com","EDMONDO FASANO"],
-		[2,"","EDIFICIO EL TOPITO","SAN BERNARDINO","","","jacktepper@gmail.com","JACK TEPPER"]
-		]
-	};
+		database:"CRUD on LocalStorage",
+		table:[
+				{
+					name:"CLIENTES",
+					data:[
+						["ID","RIF","RAZON SOCIAL","DIRECCION","TELEFONO PRINCIPAL","TELEFONO ALTERNATIVO","EMAIL","PERSONA CONTACTO"],
+						[1,"V-9972276","EDMONDO FABIO FASANO","CHACAO","0424-153-5996","","edmundofasano@gmail.com","EDMONDO FASANO"],
+						[2,"","EDIFICIO EL TOPITO","SAN BERNARDINO","","","jacktepper@gmail.com","JACK TEPPER"]
+						]
+				}
+			]
+		};
+	console.log('data guardada: '+JSON.stringify(localData));
 	localStorage.setItem("localData", JSON.stringify(localData));
 }else{
-	localData=JSON.parse(localData);
+	console.log('ya habia data: '+localData);
+	localData= JSON.parse(localStorage.getItem("localData"));
 }
 
 function update_value(){
 	bootbox.confirm({
 		size:'small',
 		message:"Are you sure?",
-		callback: function(result){ /* your callback code */ 
+		callback: function(result){ /* your callback cod e  */ 
 			if(result==true){
 				var insertData=getFormParams();
 				var tempData=[];
 				var flag=false;
-				for(var i=0;i<localData.data.length;i++){
-					if(localData.data[i][0]==insertData[0]){
+				for(var i=0;i<localData.table[0].data.length;i++){
+					if(localData.table[0].data[i][0]==insertData[0]){
 						tempData.push(insertData);
 						flag=true;
 						console.log('cambio realizado');
 					}else{
-						tempData.push(localData.data[i]);
+						tempData.push(localData.table[0].data[i]);
 					}
 				}
 				if(!flag){
 					tempData.push(insertData);
 					console.log('nuevo registro incorporado');
 				} 
-				localData.data=tempData;
+				localData.table[0].data=tempData;
 				read_value();
 			}
 		}
@@ -72,15 +78,15 @@ function delete_value(){
 				console.log('data a borrar: '+JSON.stringify(deleteData));
 				var tempData=[];
 				var flag=false;
-				for(var i=0;i<localData.data.length;i++){
-					if(localData.data[i][0]==deleteData[0]){
+				for(var i=0;i<localData.table[0].data.length;i++){
+					if(localData.table[0].data[i][0]==deleteData[0]){
 						flag=true;
 						console.log('registro borrado');
 					}else{
-						tempData.push(localData.data[i]);
+						tempData.push(localData.table[0].data[i]);
 					}
 				}
-				localData.data=tempData;
+				localData.table[0].data=tempData;
 				read_value();
 			}
 		}
@@ -88,8 +94,8 @@ function delete_value(){
 }
 
 function displayData() {
-	$("#tableData").html(createTable(localData.spreadsheet+" : "+localData.sheet,localData.data));
-	$("#newForm").html(createForm(localData.spreadsheet+" : "+localData.sheet,localData.data));
+	$("#tableData").html(createTable(localData.database+" : "+localData.table[0].name,localData.table[0].data));
+	$("#newForm").html(createForm(localData.database+" : "+localData.table[0].name,localData.table[0].data));
 	$("#formData").hide();
 	$("#showData").show();
 	$("#loader").hide();
@@ -99,8 +105,8 @@ function displayData() {
 }
 
 function setForEdit(row){
-	for(i=0; i<localData.data[0].length; i++) {
-		$("#input"+i).val(localData.data[row][i]);
+	for(i=0; i<localData.table[0].data[0].length; i++) {
+		$("#input"+i).val(localData.table[0].data[row][i]);
 	}
 	$("#formData").show();
 	$("#showData").hide();
@@ -125,7 +131,7 @@ function hideEditIcons(){
 
 function getFormParams(){
 	var param=[];
-	for(var i=0; i<localData.data[0].length; i++) {
+	for(var i=0; i<localData.table[0].data[0].length; i++) {
 		param.push($("#input"+i).val());
 	}
 	if(param[0]=="") param[0]=maxId();
@@ -134,8 +140,8 @@ function getFormParams(){
 
 function maxId(){
 	var maxId=0;
-	for(var i=0; i<localData.data.length; i++) {
-		if(localData.data[i][0]*1>maxId) maxId=localData.data[i][0]*1;
+	for(var i=0; i<localData.table[0].data.length; i++) {
+		if(localData.table[0].data[i][0]*1>maxId) maxId=localData.table[0].data[i][0]*1;
 	}
 	maxId+=1;
 	return maxId	

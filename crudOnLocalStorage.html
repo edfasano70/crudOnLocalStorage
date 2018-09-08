@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<link rel="icon" href="https://yoamoprogramar.com/wp-content/uploads/2018/01/CRUD.png" type="image/x-icon">
-	<title>C.R.U.D. OPERATION ON GOOGLE SPREAD SHEET</title>
+	<title>C.R.U.D. OPERATION ON LOCAL STORAGE TABLE</title>
 	<!--Bootstrap-->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -14,9 +13,19 @@
 
 	<script>
 //var script_url = "https://script.google.com/macros/s/AKfycbyE8Esbk1efvYoCdIe0rOVNdtMLJWOCJmcRaNkvPALOMLTH0yUy/exec";
-var script_url = "https://script.google.com/macros/s/AKfycbxbfDhBc3QU__aFBNtc8xDsZ08rGkSceweHpzyKLUid/dev";
-var database   = "1DAWu8w996rjbFvF5oj_RUfRn3npNKMVTktB1tuBBOFE";
-var table      = "CLIENTES";
+//var script_url = "https://script.google.com/macros/s/AKfycbxbfDhBc3QU__aFBNtc8xDsZ08rGkSceweHpzyKLUid/dev";
+//var database   = "1DAWu8w996rjbFvF5oj_RUfRn3npNKMVTktB1tuBBOFE";
+//var table      = "CLIENTES";
+
+var localData  = {
+	spreadsheet:"CRUD on LocalStorage",
+	sheet:"CLIENTES",
+	data:[
+		["ID","RIF","RAZON SOCIAL","DIRECCION","TELEFONO PRINCIPAL","TELEFONO ALTERNATIVO","EMAIL","PERSONA CONTACTO"],
+		[1,"V-9972276","EDMONDO FABIO FASANO","CHACAO","0424-153-5996","","edmundofasano@gmail.com","EDMONDO FASANO"],
+		[2,"","EDIFICIO EL TOPITO","SAN BERNARDINO","","","jacktepper@gmail.com","JACK TEPPER"]
+		]
+	};
 
 var f; //LA VARIALE GLOBAL que contiene todos los parámetros
 
@@ -26,17 +35,7 @@ function update_value(){
 		message:"Are you sure?",
 		callback: function(result){ /* your callback code */ 
 			if(result==true){
-				$("#loader").show();
-				var dataToSend = {
-					callback : 'ctrlq',
-					database : database,
-					table    : table,
-					action   : 'U',
-					row      : getFormParams()
-				}
-				var url =script_url+'?data='+JSON.stringify(dataToSend);    
-				console.log('update: url= '+url);
-				makeAjax(url);
+
 			}
 		}
 	});
@@ -44,15 +43,7 @@ function update_value(){
 
 function read_value() {
 	$("#loader").show();
-	var dataToSend = {
-		callback : 'ctrlq',
-		database : database,
-		table    : table,
-		action   : 'R'
-	};
-	var url =script_url+'?data='+JSON.stringify(dataToSend);
-	console.log('read: url= '+url);
-	makeAjax(url);
+	displayData();	
 }
 
 function delete_value(){
@@ -61,47 +52,27 @@ function delete_value(){
 		message:"Are you sure to delete record?",
 		callback: function(result){ /* your callback code */ 
 			if(result==true){
-				$("#loader").show();
-				var dataToSend = {
-					callback : 'ctrlq',
-					database : database,
-					table    : table,
-					action   : 'D',
-					row      : getFormParams()
-				};
-				var url =script_url+'?data='+JSON.stringify(dataToSend);
-				console.log('delete: url= '+url);
-				makeAjax(url);
+
 			}
 		}
 	});
 }
 
-function makeAjax(url){
-	var request = jQuery.ajax({
-		crossDomain: true,
-		url: url,
-		method: "GET",
-		dataType: "jsonp"
-	});
-}
 
-function ctrlq(e) {
-f = e;  // <-- hay que arreglar esto
-console.log(e.action+" : "+e.result);
-$("#loader").hide();
-$("#tableData").html(createTable(e.spreadsheet+" : "+e.sheet,e.data));
-$("#newForm").html(createForm(e.spreadsheet+" : "+e.sheet,e.data));
-$("#formData").hide();
-$("#showData").show();
-$("#loader").hide();
-resetInputs();
-hideEditIcons();
+function displayData() {
+	$("#loader").hide();
+	$("#tableData").html(createTable(localData.spreadsheet+" : "+localData.sheet,localData.data));
+	$("#newForm").html(createForm(localData.spreadsheet+" : "+localData.sheet,localData.data));
+	$("#formData").hide();
+	$("#showData").show();
+	$("#loader").hide();
+	resetInputs();
+	hideEditIcons();
 }
 
 function setForEdit(row){
-	for(i=0; i<f.data[0].length; i++) {
-		$("#input"+i).val(f.data[row][i]);
+	for(i=0; i<localData.data[0].length; i++) {
+		$("#input"+i).val(localData.data[row][i]);
 	}
 	$("#formData").show();
 	$("#showData").hide();
@@ -193,12 +164,9 @@ $('#buttonDelete').click(
 <body>
 	<div class="container">
 		<div class="jumbotron">
-			<h2>CRUD OPERATION ON GOOGLE SPREAD SHEET</h2>
-			<h4>WEB APPLICATION USING GOOGLE APP SCRIPT (GAS)</h4>
-			<h6>This is a simple application, You can develop your own logic based on your requiremets.
-			Be careful with the parameters you are sending, it should match the parameters that are received in GAS.</h6>
+			<h2>CRUD OPERATION ON LOCAL STORAGE BROWSER TABLE</h2>
+			<h6>This is a simple application, You can develop your own logic based on your requirements</h6>
 		</div>
-
 
 		<div class="row">
 			<div class="col-sm-3"></div>
@@ -233,11 +201,8 @@ $('#buttonDelete').click(
 		<div id="showData">
 			<div id="tableData" align="center"></div>
 		</div>
-		<!--<script>$("#showData").hide()</script>-->
-		<!--<p id="re"></p>-->
 		<div class="well" align="center">
 			<h6>@EdFasano70 2018 | All Rights Reserved</h6>
-			<h6>Based on ANDROID LABS' script from 2017</h6>
 		</div>
 	</div>
 

@@ -12,7 +12,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
 	<script>
-var tablePointer=1;
+var tablePointer=0;
 var localData=localStorage.getItem("localData");
 if(localData==null){
 	var localData  = {
@@ -103,6 +103,7 @@ function delete_value(){
 function displayData() {
 	$("#tableData").html(createTable(localData.database+" : "+localData.table[tablePointer].name,localData.table[tablePointer].data));
 	$("#newForm").html(createForm(localData.database+" : "+localData.table[tablePointer].name,localData.table[tablePointer].data));
+	$('#tableSelector').html(createTableSelector());
 	$("#formData").hide();
 	$("#showData").show();
 	$("#loader").hide();
@@ -177,6 +178,19 @@ function createForm(title,data){
 	return fm;
 }
 
+function createTableSelector(){
+	var res='<label for="sel1">Select TABLE:</label><select class="form-control" id="tableSelector">;'
+    for(var i=0;i<localData.table.length;i++) {
+    	if(i==tablePointer){
+    		res+='<option id="'+i+'" selected="true">'+localData.table[i].name+'</option>';
+    	}else{
+    		res+='<option id="'+i+'">'+localData.table[i].name+'</option>';
+    	}
+    }
+  	res+='</select>';
+ 	return res;
+}
+
 $(document).ready(function() {
 	read_value();
 	$("#formData").hide();
@@ -200,6 +214,12 @@ $(document).ready(function() {
 	$('#buttonDelete').click(
 		function(){
 			delete_value();
+		}
+		);
+	$('#tableSelector').change(
+		function(){
+			tablePointer=$('#tableSelector option:selected').attr('id');
+			read_value();
 		}
 		);
 });
@@ -243,6 +263,9 @@ $(document).ready(function() {
 		</div>
 
 		<div id="showData">
+			 <div class="row"><div class="form-group col-sm-3" id="tableSelector"></div></div> 		 	
+  
+
 			<div id="tableData" align="center"></div>
 		</div>
 		<div class="well" align="center">

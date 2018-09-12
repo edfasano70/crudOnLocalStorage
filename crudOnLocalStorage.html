@@ -14,43 +14,16 @@
 	<script>
 var tablePointer=0;
 var localData=localStorage.getItem("localData")||JSON.stringify({});
-//var localData=JSON.stringify({});
 localData=JSON.parse(localData);
 localData.database=localData.database||"Test Database";
 localData.table=localData.table||[{name:"table 1",data:[["ID","NAME"]]},{name:"table 2",data:[["ID","NAME2"]]}];
 console.log("localData: "+JSON.stringify(localData));
-/*if(localData==null){
-	var localData  = {
-		database:"CRUD on LocalStorage",
-		table:[
-				{
-					name:"CLIENTES",
-					data:[
-						["ID","RIF","RAZON SOCIAL","DIRECCION","TELEFONO PRINCIPAL","TELEFONO ALTERNATIVO","EMAIL","PERSONA CONTACTO"],
-						[1,"V-9972276","EDMONDO FABIO FASANO","CHACAO","0424-153-5996","","edmundofasano@gmail.com","EDMONDO FASANO"],
-						[2,"","EDIFICIO EL TOPITO","SAN BERNARDINO","","","jacktepper@gmail.com","JACK TEPPER"]
-					]
-				},
-				{
-					name:"PRODUCTOS",
-					data:[
-						["ID","NOMBRE","CODIGO","UPC","DESCRIPCION"]
-					]
-				}
-			]
-		};
-	console.log('data guardada: '+JSON.stringify(localData));
-	localStorage.setItem("localData", JSON.stringify(localData));
-}else{
-	console.log('ya habia data: '+localData);
-	localData= JSON.parse(localStorage.getItem("localData"));
-}*/
 
 function update_value(){
 	bootbox.confirm({
 		size:'small',
 		message:"Are you sure?",
-		callback: function(result){ /* your callback cod e  */ 
+		callback: function(result){ /* your callback code  */ 
 			if(result==true){
 				var insertData=getFormParams();
 				var tempData=[];

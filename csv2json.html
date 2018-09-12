@@ -5,31 +5,29 @@
   <title>Document</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script>
-    function csvJSON(csv){
-        console.log(csv);
-       // csv="1,2,3\n4,5,6";
-      var lines=csv.split(\n);
-        console.log(lines[0]);
-
-      var result = [];
-      var headers=lines[0].split(",");
-      for(var i=1;i<lines.length;i++){
-        var obj = {};
-        var currentline=lines[i].split(",");
-        for(var j=0;j<headers.length;j++){
-          obj[headers[j]] = currentline[j];
+    function csvJSON(csv,separator){
+      separator=separator||",";
+      var lines=csv.split("\n");
+        var result=[];
+        for(i=0;i<lines.length;i++){
+          result.push(lines[i].split(separator));
         }
-        result.push(obj);
-      }
-return JSON.stringify(result); //JSON
+        return result; //JSON.stringify(result);
 }   
 
 </script>
 </head>
 <body>
-  <input id="inp1" type="text">
-  <button onclick="$('#inp2').val(csvJSON($('#inp1').val()));">convertir</button>
-  <input id="inp2" type="text">
+  <button onclick="$('#inp2').val(JSON.stringify(csvJSON($('#inp1').val(),';')));">convertir</button>
+
+<div class="form-group">
+  <label for="inp1">Entrada:</label>
+  <textarea class="form-control" rows="5" id="inp1"></textarea>
+</div> 
+<div class="form-group">
+  <label for="inp2">Salida:</label>
+  <textarea class="form-control" rows="5" id="inp2"></textarea>
+</div> 
 </body>
 </html>
 

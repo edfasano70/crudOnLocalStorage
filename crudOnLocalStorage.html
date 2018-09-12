@@ -13,8 +13,13 @@
 
 	<script>
 var tablePointer=0;
-var localData=localStorage.getItem("localData");
-if(localData==null){
+var localData=localStorage.getItem("localData")||JSON.stringify({});
+//var localData=JSON.stringify({});
+localData=JSON.parse(localData);
+localData.database=localData.database||"Test Database";
+localData.table=localData.table||[{name:"table 1",data:[["ID","NAME"]]},{name:"table 2",data:[["ID","NAME2"]]}];
+console.log("localData: "+JSON.stringify(localData));
+/*if(localData==null){
 	var localData  = {
 		database:"CRUD on LocalStorage",
 		table:[
@@ -39,7 +44,7 @@ if(localData==null){
 }else{
 	console.log('ya habia data: '+localData);
 	localData= JSON.parse(localStorage.getItem("localData"));
-}
+}*/
 
 function update_value(){
 	bootbox.confirm({

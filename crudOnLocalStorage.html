@@ -14,10 +14,14 @@
 	<script>
 var tablePointer=0;
 var localData=localStorage.getItem("localData")||JSON.stringify({});
-localData=JSON.parse(localData);
-localData.database=localData.database||"Test Database";
-localData.table=localData.table||[{name:"table 1",data:[["ID","NAME"]]},{name:"table 2",data:[["ID","NAME2"]]}];
-console.log("localData: "+JSON.stringify(localData));
+checkLocalData();
+
+function checkLocalData(){
+	localData=JSON.parse(localData);
+	localData.database=localData.database||"Test Database";
+	localData.table=localData.table||[{name:"table 1",data:[["ID","NAME"]]},{name:"table 2",data:[["ID","NAME2"]]}];
+	console.log("localData: "+JSON.stringify(localData));
+}
 
 function update_value(){
 	bootbox.confirm({
@@ -172,6 +176,20 @@ function createTableSelector(){
  	return res;
 }
 
+function jsonSave(){
+	localStorage.setItem("localData",$("#jsonData_in").val());
+	localData=localStorage.getItem("localData")||JSON.stringify({});
+	checkLocalData();
+	displayData();
+}
+
+function jsonResetValues(){
+	localStorage.setItem("localData",JSON.stringify({}));
+	localData=localStorage.getItem("localData");
+	checkLocalData();
+	displayData();	
+}
+
 $(document).ready(function() {
 	read_value();
 	$("#form").hide();
@@ -235,8 +253,7 @@ $(document).ready(function() {
 						<span class="glyphicon glyphicon-remove"></span> Delete
 					</button>
 				</div>
-				<form>
-				</form>
+				<form></form>
 				<div id="form_fields"></div>
 
 			</div>
@@ -254,7 +271,21 @@ $(document).ready(function() {
 		<div class="row" id="jsonData">
 			<div class="col-sm-12">
 			<div class="form-group">
-				<label for="inp1">Database in JSON Format</label>
+				<h3>Database Raw Data (JSON format)<span class="glyphicon glyphicon-warning-sign"></span></h3>
+				<div class="btn-group">
+					<button type="button" id="jsonResetValues" class="btn btn-default btn-sm" onclick="jsonResetValues();">
+						<span class="glyphicon glyphicon-erase"></span> Reset
+					</button>
+					<button type="button" id="jsonSave" class="btn btn-default btn-sm" onclick="jsonSave();">
+						<span class="glyphicon glyphicon-save"></span> Save
+					</button>
+					        <button type="button" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-export"></span> Backup
+        </button>
+                <button type="button" class="btn btn-default btn-sm">
+          <span class="glyphicon glyphicon-import"></span> Restore
+        </button>          
+				</div>
 				<textarea class="form-control" rows="10" id="jsonData_in"></textarea>
 			</div> 
 			</div>

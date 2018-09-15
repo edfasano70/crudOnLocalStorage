@@ -90,6 +90,7 @@ function displayData() {
 	resetInputs();
 	hideEditIcons();
 	localStorage.setItem("localData", JSON.stringify(localData));
+	$("#jsonData_in").val(JSON.stringify(localData));
 }
 
 function setForEdit(row){
@@ -246,8 +247,19 @@ $(document).ready(function() {
 			<strong>Info!  </strong> <i class="fa fa-spinner fa-spin" style="font-size:24px; color:green"></i>  Processing... Wait a few seconds... 
 		</div>
 
-		<div id="table" align="center"></div>
+		<div class="row" align="center">
+			<div class="col-sm-12" id="table"></div>
+		</div>
 
+		<div class="row" id="jsonData">
+			<div class="col-sm-12">
+			<div class="form-group">
+				<label for="inp1">Database in JSON Format</label>
+				<textarea class="form-control" rows="10" id="jsonData_in"></textarea>
+			</div> 
+			</div>
+		</div>
+		
 		<div class="well" align="center">
 			<h6>@EdFasano70 2018 | All Rights Reserved</h6>
 		</div>

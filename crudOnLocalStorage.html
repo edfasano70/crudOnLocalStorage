@@ -83,7 +83,7 @@ function delete_value(){
 }
 
 function displayData() {
-	var title=localData.database+" : "+localData.table[tablePointer].name;
+	var title='<span class="glyphicon glyphicon-cog" onclick="jsonDataToggle();"></span>'+localData.database+" : "+localData.table[tablePointer].name;
 	$('#formTitle').html(title);
 	$("#table").html(createTable("",localData.table[tablePointer].data));
 	$("#form_fields").html(createForm("",localData.table[tablePointer].data));
@@ -95,6 +95,10 @@ function displayData() {
 	hideEditIcons();
 	localStorage.setItem("localData", JSON.stringify(localData));
 	$("#jsonData_in").val(JSON.stringify(localData));
+}
+
+function jsonDataToggle(){
+	$('#jsonData').toggle();
 }
 
 function setForEdit(row){
@@ -193,6 +197,7 @@ function jsonResetValues(){
 $(document).ready(function() {
 	read_value();
 	$("#form").hide();
+	$('#jsonData').hide();
 	$('[data-toggle="tooltip"]').tooltip();  //<-- inicializa los tooltips
 	$('#buttonResetValues').click(
 		function(){

@@ -79,11 +79,13 @@ function delete_value(){
 }
 
 function displayData() {
-	$("#tableData").html(createTable(localData.database+" : "+localData.table[tablePointer].name,localData.table[tablePointer].data));
-	$("#newForm").html(createForm(localData.database+" : "+localData.table[tablePointer].name,localData.table[tablePointer].data));
+	var title=localData.database+" : "+localData.table[tablePointer].name;
+	$('#formTitle').html(title);
+	$("#table").html(createTable("",localData.table[tablePointer].data));
+	$("#form_fields").html(createForm("",localData.table[tablePointer].data));
 	$('#tableSelector').html(createTableSelector());
-	$("#formData").hide();
-	$("#showData").show();
+	$("#form").hide();
+	$("#table").show();
 	$("#loader").hide();
 	resetInputs();
 	hideEditIcons();
@@ -94,8 +96,8 @@ function setForEdit(row){
 	for(i=0; i<localData.table[tablePointer].data[0].length; i++) {
 		$("#input"+i).val(localData.table[tablePointer].data[row][i]);
 	}
-	$("#formData").show();
-	$("#showData").hide();
+	$("#form").show();
+	$("#table").hide();
 }
 
 function resetInputs(){
@@ -103,8 +105,9 @@ function resetInputs(){
 }
 
 function newRecord(){
-	$("#formData").show();
-	$("#showData").hide();
+	resetInputs();
+	$("#form").show();
+	$("#table").hide();
 }
 
 function showEditIcon(row){
@@ -134,7 +137,7 @@ function maxId(){
 }
 
 function createTable(title,data){
-	var tb = "<div class='table-responsive'><table class='table table-hover table-condensed table-bordered'><caption><h3>"+title+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onclick='newRecord();' style='color: #32CD32'></span></td>";
+	var tb = "<div class='table-responsive'><table class='table table-hover table-condensed table-bordered'><caption><h3>"+title+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onClick='newRecord();' style='color: #32CD32'></span></td>";
 	for(i=0; i<data[0].length; i++) tb += "<td><b>"+data[0][i]+"</b></td>";
 		tb+="<tr></thead>";
 	for (i = 1; i < data.length; i++) {
@@ -143,13 +146,12 @@ function createTable(title,data){
 			tb+='</tr>';
 	}
 	tb += "</table></div>";
-	tb += '<div align="right"><a href="#" data-toggle="tooltip" title="New Record" data-placement="bottom"><span class="glyphicon glyphicon-plus-sign" onclick="newRecord()" style="font-size:40px;color: #32CD32"></span></a></div><br>';
+	tb += '<div align="right"><a href="#" data-toggle="tooltip" title="New Record" data-placement="bottom"><span class="glyphicon glyphicon-plus-sign" onClick="newRecord();" style="font-size:40px;color: #32CD32"></span></a></div><br>';
 	return tb;
 }
 
 function createForm(title,data){
-	var fm="";//<h3>"+title+"</h3>";
-	$('#formTitle').html(title);
+	var fm="";
 	for(i=0; i<data[0].length; i++) {
 		fm+='<div class="form-group"><label for="'+data[0][i]+'">'+data[0][i]+'</label><input type="text" class="form-control input-sm" maxlength="80" size="80" id="input'+i+'" placeholder="'+data[0][i]+'"></div>';
 	}
@@ -171,7 +173,7 @@ function createTableSelector(){
 
 $(document).ready(function() {
 	read_value();
-	$("#formData").hide();
+	$("#form").hide();
 	$('[data-toggle="tooltip"]').tooltip();  //<-- inicializa los tooltips
 	$('#buttonResetValues').click(
 		function(){
@@ -180,8 +182,8 @@ $(document).ready(function() {
 		);
 	$('#buttonList').click(
 		function(){
-			$("#formData").hide();
-			$("#showData").show();
+			$("#form").hide();
+			$("#table").show();
 		}
 		);        
 	$('#buttonSave').click(
@@ -210,11 +212,14 @@ $(document).ready(function() {
 			<h2>CRUD OPERATION ON BROWSER'S LOCAL STORAGE MINI-DATABASE</h2>
 			<h6>This is a simple application, You can develop your own logic based on your requirements</h6>
 		</div>
-
-		<div class="row">
+		
+		<div class="row" id="title">
+			<div class="col-sm-9"><h3 id="formTitle"></h3></div><div class="form-group col-sm-3" id="tableSelector"></div>
+		</div>
+		
+		<div class="row" id="form">
 			<div class="col-sm-3"></div>
 			<div class="col-sm-6" style="text-align: left;" id="formData" >
-				<h3 id="formTitle"></h3>
 				<div class="btn-group">
 					<button type="button" id="buttonResetValues" class="btn btn-default btn-sm">
 						<span class="glyphicon glyphicon-erase"></span> Reset
@@ -231,21 +236,18 @@ $(document).ready(function() {
 				</div>
 				<form>
 				</form>
-				<div id="newForm"></div>
+				<div id="form_fields"></div>
 
 			</div>
 
 		</div>
+
 		<div class="alert alert-info" id="loader" align="center">
 			<strong>Info!  </strong> <i class="fa fa-spinner fa-spin" style="font-size:24px; color:green"></i>  Processing... Wait a few seconds... 
 		</div>
 
-		<div id="showData">
-			 <div class="row"><div class="form-group col-sm-3" id="tableSelector"></div></div> 		 	
-  
+		<div id="table" align="center"></div>
 
-			<div id="tableData" align="center"></div>
-		</div>
 		<div class="well" align="center">
 			<h6>@EdFasano70 2018 | All Rights Reserved</h6>
 		</div>

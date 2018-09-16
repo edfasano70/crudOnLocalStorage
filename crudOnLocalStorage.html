@@ -11,6 +11,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
 
+
 	<script>
 var tablePointer=0;
 var localData=localStorage.getItem("localData")||JSON.stringify({});
@@ -157,7 +158,7 @@ function maxId(){
 }
 
 function createTable(title,data){
-	var tb = "<div class='table-responsive'><table class='table table-hover table-condensed table-bordered'><caption><h3>"+title+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onClick='newRecord();' style='color: #32CD32'></span></td>";
+	var tb = "<div class='table-responsive'><table class='table table-hover table-condensed table-bordered' id='myTable'><caption><h3>"+title+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onClick='newRecord();' style='color: #32CD32'></span></td>";
 	for(i=0; i<data[0].length; i++) tb += "<td><b>"+data[0][i]+"</b></td>";
 		tb+="<tr></thead>";
 	for (i = 1; i < data.length; i++) {
@@ -245,6 +246,7 @@ $(document).ready(function() {
 	$("#form").hide();
 	$('#jsonData').hide();
 	$('[data-toggle="tooltip"]').tooltip();  //<-- inicializa los tooltips
+
 	$('#buttonResetValues').click(
 		function(){
 			resetInputs();

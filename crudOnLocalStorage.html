@@ -98,14 +98,16 @@ function displayData() {
 }
 
 function jsonDataToggle(){
-	bootbox.prompt({
-		title: "Ingrese la clave de operaciones especiales",
-        inputType: 'password',
-        callback: function (result) {
-            if(result=="1111")	$('#jsonData').toggle();
-            $('#jsonData_in').focus();
-        }
-    });
+	if($("#jsonData").css("display")=="none"){
+		bootbox.prompt({
+			title: "Ingrese la clave de operaciones especiales",
+	        inputType: 'password',
+	        callback: function (result) {
+	            if(result=="1111")	$('#jsonData').toggle();
+	            $('#jsonData_in').focus();
+	        }
+	    });
+	}
 }
 
 function setForEdit(row){

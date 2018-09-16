@@ -161,7 +161,7 @@ function createTable(title,data){
 	for(i=0; i<data[0].length; i++) tb += "<td><b>"+data[0][i]+"</b></td>";
 		tb+="<tr></thead>";
 	for (i = 1; i < data.length; i++) {
-		tb += '<tr row="'+i+'" onClick="setForEdit('+i+')" onMouseEnter="showEditIcon(this)" onMouseLeave="hideEditIcons()"><td align="center"><span id="editRecordIcon" class="glyphicon glyphicon-pencil" style="color:#00BFFF"></span></td>';
+		tb += '<tr row="'+i+'" onClick="setForEdit('+i+')" onMouseEnter="showEditIcon(this)" onMouseLeave="hideEditIcons()"><td align="center"><span id="editRecordIcon" class="glyphicon glyphicon-pencil"></span></td>';
 		for(j=0;j<data[0].length;j++) tb+='<td>'+data[i][j]+'</td>';
 			tb+='</tr>';
 	}

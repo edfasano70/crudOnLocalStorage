@@ -95,7 +95,7 @@ function displayData() {
 	$("#table").show();
 	$("#loader").hide();
 	resetInputs();
-	hideEditIcons();
+	//hideEditIcons();
 	localStorage.setItem("localData", JSON.stringify(localData));
 	$("#jsonData_in").val(JSON.stringify(localData,null,'\t'));
 }
@@ -130,14 +130,14 @@ function newRecord(){
 	$("#form").show();
 	$("#table").hide();
 }
-
+/*
 function showEditIcon(row){
 	$(row).find('#editRecordIcon').show();
 }
 
 function hideEditIcons(){
 	$("[id*=editRecordIcon]").hide();
-}
+}*/
 
 function getFormParams(){
 	var param=[];
@@ -158,16 +158,16 @@ function maxId(){
 }
 
 function createTable(title,data){
-	var tb = "<div class='table-responsive'><table class='table table-hover table-condensed table-bordered' id='myTable'><caption><h3>"+title+"</h3></caption><thead><tr><td width='32px' align='center'><span class='glyphicon glyphicon-plus-sign' onClick='newRecord();' style='color: #32CD32'></span></td>";
-	for(i=0; i<data[0].length; i++) tb += "<td><b>"+data[0][i]+"</b></td>";
+	var tb = "<div class='table-responsive'><table class='table table-hover table-condensed table-bordered' id='myTable'><caption><h3>"+title+"</h3></caption><thead><tr>";
+	for(i=0; i<data[0].length; i++) tb += "<th onClick='alert(\""+data[0][i]+"\");'>"+data[0][i]+"</th>";
 		tb+="<tr></thead>";
 	for (i = 1; i < data.length; i++) {
-		tb += '<tr row="'+i+'" onClick="setForEdit('+i+')" onMouseEnter="showEditIcon(this)" onMouseLeave="hideEditIcons()"><td align="center"><span id="editRecordIcon" class="glyphicon glyphicon-pencil"></span></td>';
+		tb += '<tr row="'+i+'" onClick="setForEdit('+i+')">';
 		for(j=0;j<data[0].length;j++) tb+='<td>'+data[i][j]+'</td>';
 			tb+='</tr>';
 	}
 	tb += "</table></div>";
-	tb += '<div align="right"><a href="#" data-toggle="tooltip" title="New Record" data-placement="bottom"><span class="glyphicon glyphicon-plus-sign" onClick="newRecord();" style="font-size:40px;color: #32CD32"></span></a></div><br>';
+	tb += '<div align="right"><button type="button" class="btn btn-default btn-sm" onClick="newRecord();"><span class="glyphicon glyphicon-plus-sign"></span> New Record</button></div><br>';
 	return tb;
 }
 

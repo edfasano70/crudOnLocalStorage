@@ -96,7 +96,7 @@ function displayData() {
 	resetInputs();
 	hideEditIcons();
 	localStorage.setItem("localData", JSON.stringify(localData));
-	$("#jsonData_in").val(JSON.stringify(localData));
+	$("#jsonData_in").val(JSON.stringify(localData,null,'\t'));
 }
 
 function jsonDataToggle(){

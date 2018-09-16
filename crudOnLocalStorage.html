@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>C.R.U.D. OPERATION ON LOCAL STORAGE TABLE</title>
+	<title>No title yet!</title>
 	<!--Bootstrap-->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -18,6 +18,8 @@ checkLocalData();
 
 function checkLocalData(){
 	localData=JSON.parse(localData);
+	localData.appTitle=localData.appTitle||'C.R.U.D. OPERATION ON LOCAL STORAGE TABLE';
+	document.title=localData.appTitle;
 	localData.database=localData.database||"Test Database";
 	localData.table=localData.table||[{name:"table 1",data:[["ID","NAME"]]},{name:"table 2",data:[["ID","NAME2"]]}];
 	console.log("localData: "+JSON.stringify(localData));

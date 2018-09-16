@@ -83,7 +83,7 @@ function delete_value(){
 }
 
 function displayData() {
-	var title='<span class="glyphicon glyphicon-cog" onclick="jsonDataToggle();"></span>'+localData.database+" : "+localData.table[tablePointer].name;
+	var title='<span class="glyphicon glyphicon-cog" onclick="jsonDataToggle();"></span>    '+localData.database+" : "+localData.table[tablePointer].name;
 	$('#formTitle').html(title);
 	$("#table").html(createTable("",localData.table[tablePointer].data));
 	$("#form_fields").html(createForm("",localData.table[tablePointer].data));
@@ -98,7 +98,14 @@ function displayData() {
 }
 
 function jsonDataToggle(){
-	$('#jsonData').toggle();
+	bootbox.prompt({
+		title: "Ingrese la clave de operaciones especiales",
+        inputType: 'password',
+        callback: function (result) {
+            if(result=="1111")	$('#jsonData').toggle();
+            $('#jsonData_in').focus();
+        }
+    });
 }
 
 function setForEdit(row){
@@ -181,17 +188,52 @@ function createTableSelector(){
 }
 
 function jsonSave(){
-	localStorage.setItem("localData",$("#jsonData_in").val());
-	localData=localStorage.getItem("localData")||JSON.stringify({});
-	checkLocalData();
-	displayData();
+	bootbox.confirm({
+		size:'small',
+		message:"Are you sure to SAVE changes on the DATABASE?",
+		callback: function(result){ /* your callback code */ 
+			if(result==true){
+				localStorage.setItem("localData",$("#jsonData_in").val());
+				localData=localStorage.getItem("localData")||JSON.stringify({});
+				checkLocalData();
+				displayData();	
+			}
+		}
+	});
 }
 
 function jsonResetValues(){
-	localStorage.setItem("localData",JSON.stringify({}));
-	localData=localStorage.getItem("localData");
-	checkLocalData();
-	displayData();	
+	bootbox.confirm({
+		size:'small',
+		message:"Are you sure to RESET the ENTIRE DATABASE?",
+		callback: function(result){ /* your callback code */ 
+			if(result==true){
+				localStorage.setItem("localData",JSON.stringify({}));
+				localData=localStorage.getItem("localData");
+				checkLocalData();
+				displayData();	
+			}
+		}
+	});
+}
+
+function jsonRefresh(){
+	bootbox.confirm({
+		size:'small',
+		message:"Are you sure to REFRESH the ENTIRE DATABASE? (CHANGES WILL BE LOST)",
+		callback: function(result){ /* your callback code */ 
+			if(result==true){
+				$("#jsonData_in").val(JSON.stringify(localData));	
+			}
+		}
+	});	
+}
+
+function jsonCopy(){
+	bootbox.alert('Database copied in the clipboard! (JSON text format)');	
+	$('#jsonData_in').focus();
+	$('#jsonData_in').select();
+	document.execCommand('copy');
 }
 
 $(document).ready(function() {
@@ -276,7 +318,7 @@ $(document).ready(function() {
 		<div class="row" id="jsonData">
 			<div class="col-sm-12">
 			<div class="form-group">
-				<h3>Database Raw Data (JSON format)<span class="glyphicon glyphicon-warning-sign"></span></h3>
+				<h3>Database Raw Data (JSON format)     <span class="glyphicon glyphicon-eye-close" onclick='$("#jsonData").toggle();'></span></h3>
 				<div class="btn-group">
 					<button type="button" id="jsonResetValues" class="btn btn-default btn-sm" onclick="jsonResetValues();">
 						<span class="glyphicon glyphicon-erase"></span> Reset
@@ -290,10 +332,10 @@ $(document).ready(function() {
 					<button type="button" class="btn btn-default btn-sm">
 						<span class="glyphicon glyphicon-import"></span> Restore
 					</button>					
-					<button type="button" class="btn btn-default btn-sm" onclick="$('#jsonData_in').focus();$('#jsonData_in').select();document.execCommand('copy')">
+					<button type="button" class="btn btn-default btn-sm" onclick="jsonCopy();">
 						<span class="glyphicon glyphicon-copy"></span> Copy
 					</button>
-                	<button type="button" class="btn btn-default btn-sm" onclick='$("#jsonData_in").val(JSON.stringify(localData));'>
+                	<button type="button" class="btn btn-default btn-sm" onclick='jsonRefresh();'>
          	 			<span class="glyphicon glyphicon-refresh"></span> Refresh
         			</button>          
 				</div>

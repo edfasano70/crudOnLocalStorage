@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script>
+var myVar={
+	"database": "PRUEBAS DATABASE",
+	"table": {
+		
+			"name": "FAMILIA",
+			"data": [
+				{
+					"ID":"1",
+					"NAME":"EDMONDO",
+					"TELEFONO":"04241535996",
+					"CUMPLEAÑOS":"13/09/70"
+				},
+				{
+					"ID":"2",
+					"NAME":"MARILY PEREZ",
+					"TELEFONO":"0424-153.5996",
+					"CUMPLEAÑOS":"13-09-1970"
+				}
+			]
+	},
+		
+	"appTitle": "PRUEBAS DATABASE"
+}
+
+
+
+myVar=myVar.table.data[1];
+
+
+
+
+		//var myVar = { test: { typeA: '501', typeB : '502' } };
+
+		for (var key1 in myVar) {
+
+			console.log(key1+" = "+myVar[key1]);   
+
+
+  
+		}
+		console.log("con Object.keys");
+		console.log(Object.keys(myVar));
+
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <!--Bootstrap-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
+  <script>
+    var data={};
+    function process(){
+      xlsPasteToJsonArray($('#inp1').val());
+      $('#result').html(createTable('Data Cruda',data));
+    }
+
+    function xlsPasteToJsonArray(xls){
+      var separator=";";
+      var lines=xls.split("\n");
+        var result=[];
+        //result.push(["TIENDA","CODIGO","DESCRIPCION","PRECIO","FECHA","INV","SURTIR","DOCS-SURTIR","NO SURTIR","DOCS-NO SURTIR","AEREO"]);
+        for(i=0;i<lines.length;i++){
+          lines[i]=lines[i].replace(/\t\t/g, ";");
+          lines[i]=lines[i].replace(/\t/g, ";");
+          lines[i]=lines[i].replace(/;;/g, "");
+          console.log('Línea '+i+' : '+lines[i]);
+          result.push(lines[i].split(separator));
+        }
+        result[0]=["TIENDA","CODIGO","DESCRIPCION","PRECIO","FECHA","INV","SURTIR","DOCS-SURTIR","NO SURTIR","DOCS-NO SURTIR","AEREO"];
+        console.log('Data de salida ---------------------------------');
+        console.log(result);
+        data=result; //JSON.stringify(result);
+}   
+
+function createTable(title,data){
+  var tb = "<div class='table-responsive'><table class='table table-hover table-condensed table-bordered' id='myTable'><caption><h3>"+title+"</h3></caption><thead><tr>";
+  for(i=0; i<data[0].length; i++) tb += "<th onClick='alert(\""+data[0][i]+"\");'>"+data[0][i]+"</th>";
+    tb+="<tr></thead>";
+  for (i = 1; i < data.length; i++) {
+    tb += '<tr row="'+i+'" onClick="setForEdit('+i+')">';
+    for(j=0;j<data[0].length;j++) tb+='<td>'+data[i][j]+'</td>';
+      tb+='</tr>';
+  }
+  tb += "</table></div>";
+  tb += '<div align="right"><button type="button" class="btn btn-default btn-sm" onClick="newRecord();"><span class="glyphicon glyphicon-plus-sign"></span> New Record</button></div><br>';
+  return tb;
+}
+
+</script>
+</head>
+<body>
+  <button onclick="process();">convertir</button>
+
+<div class="form-group">
+  <label for="inp1">Entrada:</label>
+  <textarea class="form-control" rows="5" id="inp1"></textarea>
+</div> 
+<div class="form-group">
+  <label for="inp2">Salida:</label>
+  <textarea class="form-control" rows="5" id="inp2"></textarea>
+</div>
+<div id="result"></div>
+</body>
+</html>
+
+
+
+
+
+
+

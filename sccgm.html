@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>No title yet!</title>
+	<!--Bootstrap-->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
+
+	<script>
+var tablePointer=0;
+var localData=localStorage.getItem("localData")||JSON.stringify({});
+checkLocalData();
+
+function checkLocalData(){
+	localData=JSON.parse(localData);
+	localData.appTitle=localData.appTitle||'C.R.U.D. OPERATION ON LOCAL STORAGE TABLE';
+	document.title=localData.appTitle;
+	localData.database=localData.database||"Test Database";
+	localData.table=localData.table||[{name:"table 1",data:[["ID","NAME"]]},{name:"table 2",data:[["ID","NAME2"]]}];
+	console.log("localData: "+JSON.stringify(localData));
+}
+
+function update_value(){
+	bootbox.confirm({
+		size:'small',
+		message:"Are you sure?",
+		callback: function(result){ /* your callback code  */ 
+			if(result==true){
+				var insertData=getFormParams();
+				var tempData=[];
+				var flag=false;
+				for(var i=0;i<localData.table[tablePointer].data.length;i++){
+					if(localData.table[tablePointer].data[i][0]==insertData[0]){
+						tempData.push(insertData);
+						flag=true;
+						console.log('cambio realizado');
+					}else{
+						tempData.push(localData.table[tablePointer].data[i]);
+					}
+				}
+				if(!flag){
+					tempData.push(insertData);
+					console.log('nuevo registro incorporado');
+				} 
+				localData.table[tablePointer].data=tempData;
+				read_value();
+			}
+		}
+	});
+}
+
+function read_value() {
+	$("#loader").show();
+	displayData();	
+}
+
+function delete_value(){
+	bootbox.confirm({
+		size:'small',
+		message:"Are you sure to delete record?",
+		callback: function(result){ /* your callback code */ 
+			if(result==true){
+				var deleteData=getFormParams();
+				console.log('data a borrar: '+JSON.stringify(deleteData));
+				var tempData=[];
+				var flag=false;
+				for(var i=0;i<localData.table[tablePointer].data.length;i++){
+					if(localData.table[tablePointer].data[i][0]==deleteData[0]){
+						flag=true;
+						console.log('registro borrado');
+					}else{
+						tempData.push(localData.table[tablePointer].data[i]);
+					}
+				}
+				localData.table[tablePointer].data=tempData;
+				read_value();
+			}
+		}
+	});
+}
+
+function displayData() {
+	var title='<span class="glyphicon glyphicon-cog" onclick="jsonDataToggle();"></span>    '+localData.database+" : "+localData.table[tablePointer].name;
+	$('#formTitle').html(title);
+	$("#table").html(createTable("",localData.table[tablePointer].data));
+	$("#form_fields").html(createForm("",localData.table[tablePointer].data));
+	$('#tableSelector').html(createTableSelector());
+	$("#form").hide();
+	$("#table").show();
+	$("#loader").hide();
+	resetInputs();
+	//hideEditIcons();
+	localStorage.setItem("localData", JSON.stringify(localData));
+	$("#jsonData_in").val(JSON.stringify(localData,null,'\t'));
+}
+
+function jsonDataToggle(){
+	if($("#jsonData").css("display")=="none"){
+		bootbox.prompt({
+			title: "Ingrese la clave de operaciones especiales",
+	        inputType: 'password',
+	        callback: function (result) {
+	            if(result=="1111")	$('#jsonData').toggle();
+	            $('#jsonData_in').focus();
+	        }
+	    });
+	}
+}
+
+function setForEdit(row){
+	for(i=0; i<localData.table[tablePointer].data[0].length; i++) {
+		$("#input"+i).val(localData.table[tablePointer].data[row][i]);
+	}
+	$("#form").show();
+	$("#table").hide();
+}
+
+function resetInputs(){
+	$("input").val("");
+}
+
+function newRecord(){
+	resetInputs();
+	$("#form").show();
+	$("#table").hide();
+}
+/*
+function showEditIcon(row){
+	$(row).find('#editRecordIcon').show();
+}
+
+function hideEditIcons(){
+	$("[id*=editRecordIcon]").hide();
+}*/
+
+function getFormParams(){
+	var param=[];
+	for(var i=0; i<localData.table[tablePointer].data[0].length; i++) {
+		param.push($("#input"+i).val());
+	}
+	if(param[0]=="") param[0]=maxId();
+	return param
+}
+
+function maxId(){
+	var maxId=0;
+	for(var i=0; i<localData.table[tablePointer].data.length; i++) {
+		if(localData.table[tablePointer].data[i][0]*1>maxId) maxId=localData.table[tablePointer].data[i][0]*1;
+	}
+	maxId+=1;
+	return maxId	
+}
+
+function createTable(title,data){
+	var tb = "<div class='table-responsive'><table class='table table-hover table-condensed table-bordered' id='myTable'><caption><h3>"+title+"</h3></caption><thead><tr>";
+	for(i=0; i<data[0].length; i++) tb += "<th onClick='alert(\""+data[0][i]+"\");'>"+data[0][i]+"</th>";
+		tb+="<tr></thead>";
+	for (i = 1; i < data.length; i++) {
+		tb += '<tr row="'+i+'" onClick="setForEdit('+i+')">';
+		for(j=0;j<data[0].length;j++) tb+='<td>'+data[i][j]+'</td>';
+			tb+='</tr>';
+	}
+	tb += "</table></div>";
+	tb += '<div align="right"><button type="button" class="btn btn-default btn-sm" onClick="newRecord();"><span class="glyphicon glyphicon-plus-sign"></span> New Record</button></div><br>';
+	return tb;
+}
+
+function createForm(title,data){
+	var fm="";
+	for(i=0; i<data[0].length; i++) {
+		fm+='<div class="form-group"><label for="'+data[0][i]+'">'+data[0][i]+'</label><input type="text" class="form-control input-sm" maxlength="80" size="80" id="input'+i+'" placeholder="'+data[0][i]+'"></div>';
+	}
+	return fm;
+}
+
+function createTableSelector(){
+	var res='<label for="sel1">Select TABLE:</label><select class="form-control" id="tableSelector">;'
+    for(var i=0;i<localData.table.length;i++) {
+    	if(i==tablePointer){
+    		res+='<option id="'+i+'" selected="true">'+localData.table[i].name+'</option>';
+    	}else{
+    		res+='<option id="'+i+'">'+localData.table[i].name+'</option>';
+    	}
+    }
+  	res+='</select>';
+ 	return res;
+}
+
+function jsonSave(){
+	bootbox.confirm({
+		size:'small',
+		message:"Are you sure to SAVE changes on the DATABASE?",
+		callback: function(result){ /* your callback code */ 
+			if(result==true){
+				localStorage.setItem("localData",$("#jsonData_in").val());
+				localData=localStorage.getItem("localData")||JSON.stringify({});
+				checkLocalData();
+				displayData();	
+			}
+		}
+	});
+}
+
+function jsonResetValues(){
+	bootbox.confirm({
+		size:'small',
+		message:"Are you sure to RESET the ENTIRE DATABASE?",
+		callback: function(result){ /* your callback code */ 
+			if(result==true){
+				localStorage.setItem("localData",JSON.stringify({}));
+				localData=localStorage.getItem("localData");
+				checkLocalData();
+				displayData();	
+			}
+		}
+	});
+}
+
+function jsonRefresh(){
+	bootbox.confirm({
+		size:'small',
+		message:"Are you sure to REFRESH the ENTIRE DATABASE? (CHANGES WILL BE LOST)",
+		callback: function(result){ /* your callback code */ 
+			if(result==true){
+				$("#jsonData_in").val(JSON.stringify(localData));	
+			}
+		}
+	});	
+}
+
+function jsonCopy(){
+	bootbox.alert('Database copied in the clipboard! (JSON text format)');	
+	$('#jsonData_in').focus();
+	$('#jsonData_in').select();
+	document.execCommand('copy');
+}
+
+$(document).ready(function() {
+	read_value();
+	$("#form").hide();
+	$('#jsonData').hide();
+	$('[data-toggle="tooltip"]').tooltip();  //<-- inicializa los tooltips
+
+	$('#buttonResetValues').click(
+		function(){
+			resetInputs();
+		}
+		);
+	$('#buttonList').click(
+		function(){
+			$("#form").hide();
+			$("#table").show();
+		}
+		);        
+	$('#buttonSave').click(
+		function(){
+			update_value();
+		}
+		);
+	$('#buttonDelete').click(
+		function(){
+			delete_value();
+		}
+		);
+	$('#tableSelector').change(
+		function(){
+			tablePointer=$('#tableSelector option:selected').attr('id');
+			read_value();
+		}
+		);
+});
+
+</script>
+</head>
+<body>
+	<div class="container">
+		<div class="jumbotron">
+			<div class="row">
+				<div class="col-sm-3"> <img class="img-thumbnail img-responsive" src="logo.jpg" alt="LOGO"> </div>
+				<div class="col-sm-9">
+								<h2>EDIFICIO GALERIAS MIRANDA</h2>
+			<h4>SISTEMA DE CONTROL DE CONDOMINIO</h4>
+				</div>
+			</div>
+
+		</div>
+		
+		<div class="row" id="title">
+			<div class="col-sm-9"><h3 id="formTitle"></h3></div><div class="form-group col-sm-3" id="tableSelector"></div>
+		</div>
+		
+		<div class="row" id="form">
+			<div class="col-sm-3"></div>
+			<div class="col-sm-6" style="text-align: left;" id="formData" >
+				<div class="btn-group">
+					<button type="button" id="buttonResetValues" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-erase"></span> Reset
+					</button>
+					<button type="button" id="buttonList" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-list"></span> List
+					</button>
+					<button type="button" id="buttonSave" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-save"></span> Save
+					</button>          
+					<button type="button" id="buttonDelete" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-remove"></span> Delete
+					</button>
+				</div>
+				<form></form>
+				<div id="form_fields"></div>
+
+			</div>
+
+		</div>
+
+		<div class="alert alert-info" id="loader" align="center">
+			<strong>Info!  </strong> <i class="fa fa-spinner fa-spin" style="font-size:24px; color:green"></i>  Processing... Wait a few seconds... 
+		</div>
+
+		<div class="row" align="center">
+			<div class="col-sm-12" id="table"></div>
+		</div>
+
+		<div class="row" id="jsonData">
+			<div class="col-sm-12">
+			<div class="form-group">
+				<h3>Database Raw Data (JSON format)     <span class="glyphicon glyphicon-eye-close" onclick='$("#jsonData").toggle();'></span></h3>
+				<div class="btn-group">
+					<button type="button" id="jsonResetValues" class="btn btn-default btn-sm" onclick="jsonResetValues();">
+						<span class="glyphicon glyphicon-erase"></span> Reset
+					</button>
+					<button type="button" id="jsonSave" class="btn btn-default btn-sm" onclick="jsonSave();">
+						<span class="glyphicon glyphicon-save"></span> Save
+					</button>
+					<button type="button" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-export"></span> Backup
+					</button>
+					<button type="button" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-import"></span> Restore
+					</button>					
+					<button type="button" class="btn btn-default btn-sm" onclick="jsonCopy();">
+						<span class="glyphicon glyphicon-copy"></span> Copy
+					</button>
+                	<button type="button" class="btn btn-default btn-sm" onclick='jsonRefresh();'>
+         	 			<span class="glyphicon glyphicon-refresh"></span> Refresh
+        			</button>          
+				</div>
+				<textarea class="form-control" rows="10" id="jsonData_in"></textarea>
+			</div> 
+			</div>
+		</div>
+		
+		<div class="well" align="center">
+			<h6>@EdFasano70 2018 | All Rights Reserved</h6>
+		</div>
+	</div>
+
+</body>
+<html>
+
+
+
+
+

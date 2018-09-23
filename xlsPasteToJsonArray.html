@@ -15,6 +15,7 @@
     var data={};
     function process(){
       xlsPasteToJsonArray($('#inp1').val());
+      $('#inp2').val(JSON.stringify(data));
       $('#result').html(createTable('Data Cruda',data));
     }
 
@@ -24,13 +25,13 @@
         var result=[];
         //result.push(["TIENDA","CODIGO","DESCRIPCION","PRECIO","FECHA","INV","SURTIR","DOCS-SURTIR","NO SURTIR","DOCS-NO SURTIR","AEREO"]);
         for(i=0;i<lines.length;i++){
-          lines[i]=lines[i].replace(/\t\t/g, ";");
+          //lines[i]=lines[i].replace(/\t\t/g, ";");
           lines[i]=lines[i].replace(/\t/g, ";");
           lines[i]=lines[i].replace(/;;/g, "");
           console.log('Línea '+i+' : '+lines[i]);
           result.push(lines[i].split(separator));
         }
-        result[0]=["TIENDA","CODIGO","DESCRIPCION","PRECIO","FECHA","INV","SURTIR","DOCS-SURTIR","NO SURTIR","DOCS-NO SURTIR","AEREO"];
+        //result[0]=["TIENDA","CODIGO","DESCRIPCION","PRECIO","FECHA","INV","SURTIR","DOCS-SURTIR","NO SURTIR","DOCS-NO SURTIR","AEREO"];
         console.log('Data de salida ---------------------------------');
         console.log(result);
         data=result; //JSON.stringify(result);

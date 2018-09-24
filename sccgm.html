@@ -5,6 +5,7 @@
 	<title>No title yet!</title>
 	<!--Bootstrap-->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="https://edfasano70.github.io/crudOnLocalStorage/icon_condo.png">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -13,8 +14,9 @@
 
 
 	<script>
+var localStorageName='sccgm';
 var tablePointer=0;
-var localData=localStorage.getItem("localData")||JSON.stringify({});
+var localData=localStorage.getItem(localStorageName)||JSON.stringify({});
 checkLocalData();
 
 function checkLocalData(){
@@ -96,7 +98,7 @@ function displayData() {
 	$("#loader").hide();
 	resetInputs();
 	//hideEditIcons();
-	localStorage.setItem("localData", JSON.stringify(localData));
+	localStorage.setItem(localStorageName, JSON.stringify(localData));
 	$("#jsonData_in").val(JSON.stringify(localData,null,'\t'));
 }
 
@@ -198,8 +200,8 @@ function jsonSave(){
 		message:"Are you sure to SAVE changes on the DATABASE?",
 		callback: function(result){ /* your callback code */ 
 			if(result==true){
-				localStorage.setItem("localData",$("#jsonData_in").val());
-				localData=localStorage.getItem("localData")||JSON.stringify({});
+				localStorage.setItem(localStorageName,$("#jsonData_in").val());
+				localData=localStorage.getItem(localStorageName)||JSON.stringify({});
 				checkLocalData();
 				displayData();	
 			}
@@ -213,8 +215,8 @@ function jsonResetValues(){
 		message:"Are you sure to RESET the ENTIRE DATABASE?",
 		callback: function(result){ /* your callback code */ 
 			if(result==true){
-				localStorage.setItem("localData",JSON.stringify({}));
-				localData=localStorage.getItem("localData");
+				localStorage.setItem(localStorageName,JSON.stringify({}));
+				localData=localStorage.getItem(localStorageName);
 				checkLocalData();
 				displayData();	
 			}
@@ -282,7 +284,7 @@ $(document).ready(function() {
 	<div class="container">
 		<div class="jumbotron">
 			<div class="row">
-				<div class="col-sm-3"> <img class="img-circle img-responsive" src="logo.jpg" alt="LOGO"> </div>
+				<div class="col-sm-3"> <img class="img-circle img-responsive" src="https://edfasano70.github.io/crudOnLocalStorage/logo.jpg" alt="LOGO"> </div>
 				<div class="col-sm-9">
 								<h2>EDIFICIO GALERIAS MIRANDA</h2>
 			<h4>SISTEMA DE CONTROL DE CONDOMINIO</h4>

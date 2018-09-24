@@ -5,7 +5,8 @@
 	<title>No title yet!</title>
 	<!--Bootstrap-->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="shortcut icon" href="https://edfasano70.github.io/crudOnLocalStorage/icon_condo.png">
+	<!--<link rel="shortcut icon" href="./logo.jpg" /> -->
+	<link rel="icon" type="image/png" href="./icon_condo.png" />
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -90,7 +91,7 @@ function delete_value(){
 function displayData() {
 	var title='<span class="glyphicon glyphicon-cog" onclick="jsonDataToggle();"></span>    '+localData.database+" : "+localData.table[tablePointer].name;
 	$('#formTitle').html(title);
-	$("#table").html(createTable("",localData.table[tablePointer].data));
+	$("#table").html(createTable(localData.table[tablePointer]));
 	$("#form_fields").html(createForm("",localData.table[tablePointer].data));
 	$('#tableSelector').html(createTableSelector());
 	$("#form").hide();
@@ -159,13 +160,14 @@ function maxId(){
 	return maxId	
 }
 
-function createTable(title,data){
-	var tb = "<div class='table-responsive'><table class='table table-hover table-condensed table-bordered' id='myTable'><caption><h3>"+title+"</h3></caption><thead><tr>";
-	for(i=0; i<data[0].length; i++) tb += "<th onClick='alert(\""+data[0][i]+"\");'>"+data[0][i]+"</th>";
+function createTable(table){
+	table.caption=table.caption||"esta es una prueba";
+	var tb = "<div class='table-responsive'><table class='table table-hover table-condensed table-bordered' id='myTable'><caption><h3>"+table.caption+"</h3></caption><thead><tr>";
+	for(i=0; i<table.data[0].length; i++) tb += "<th onClick='alert(\""+table.data[0][i]+"\");'>"+table.data[0][i]+"</th>";
 		tb+="<tr></thead>";
-	for (i = 1; i < data.length; i++) {
+	for (i = 1; i < table.data.length; i++) {
 		tb += '<tr row="'+i+'" onClick="setForEdit('+i+')">';
-		for(j=0;j<data[0].length;j++) tb+='<td>'+data[i][j]+'</td>';
+		for(j=0;j<table.data[0].length;j++) tb+='<td>'+table.data[i][j]+'</td>';
 			tb+='</tr>';
 	}
 	tb += "</table></div>";
@@ -284,7 +286,7 @@ $(document).ready(function() {
 	<div class="container">
 		<div class="jumbotron">
 			<div class="row">
-				<div class="col-sm-3"> <img class="img-circle img-responsive" src="https://edfasano70.github.io/crudOnLocalStorage/logo.jpg" alt="LOGO"> </div>
+				<div class="col-sm-3"> <img class="img-circle img-responsive" src="./logo.jpg" alt="LOGO"> </div>
 				<div class="col-sm-9">
 								<h2>EDIFICIO GALERIAS MIRANDA</h2>
 			<h4>SISTEMA DE CONTROL DE CONDOMINIO</h4>

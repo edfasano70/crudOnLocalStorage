@@ -97,7 +97,7 @@ function jsonSave(){
 				localStorage.setItem(localStorageName,$("#jsonData_in").val());
 				localData=localStorage.getItem(localStorageName)||JSON.stringify({});
 				checkLocalData();
-				displayData();	
+				read_value();	
 			}
 		}
 	});
@@ -112,7 +112,7 @@ function jsonResetValues(){
 				localStorage.setItem(localStorageName,JSON.stringify({}));
 				localData=localStorage.getItem(localStorageName);
 				checkLocalData();
-				displayData();	
+				read_value();	
 			}
 		}
 	});

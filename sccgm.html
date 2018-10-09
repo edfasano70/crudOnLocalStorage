@@ -22,17 +22,8 @@ var localData 			=	localStorage.getItem(localStorageName)	||	JSON.stringify({});
 
 checkLocalData();
 
-function checkLocalData(){
-	localData=JSON.parse(localData);
-	localData.appTitle=localData.appTitle||'C.R.U.D. OPERATION ON LOCAL STORAGE TABLE';
-	document.title=localData.appTitle;
-	localData.database=localData.database||"Test Database";
-	localData.table=localData.table||[{name:"table 1",data:[["ID","NAME"]]},{name:"table 2",data:[["ID","NAME2"]]}];
-	console.log("localData: "+JSON.stringify(localData));
-}
-
 $(document).ready(function() {
-	read_value();
+	refresh();
 	$('[data-toggle="tooltip"]').tooltip();  //<-- inicializa los tooltips
 });
 
@@ -63,34 +54,7 @@ $(document).ready(function() {
 
 		<div class="row" align="center" id="table"></div>
 
-		<div class="row" id="jsonData" style="display: none">
-			<div class="col-sm-12">
-			<div class="form-group">
-				<h3>Database Raw Data (JSON format)     <span class="glyphicon glyphicon-eye-close" onclick='$("#jsonData").toggle();'></span></h3>
-				<div class="btn-group">
-					<button type="button" id="jsonResetValues" class="btn btn-default btn-sm" onclick="jsonResetValues();">
-						<span class="glyphicon glyphicon-erase"></span> Reset
-					</button>
-					<button type="button" id="jsonSave" class="btn btn-default btn-sm" onclick="jsonSave();">
-						<span class="glyphicon glyphicon-save"></span> Save
-					</button>
-					<button type="button" class="btn btn-default btn-sm">
-						<span class="glyphicon glyphicon-export"></span> Backup
-					</button>
-					<button type="button" class="btn btn-default btn-sm">
-						<span class="glyphicon glyphicon-import"></span> Restore
-					</button>					
-					<button type="button" class="btn btn-default btn-sm" onclick="jsonCopy();">
-						<span class="glyphicon glyphicon-copy"></span> Copy
-					</button>
-                	<button type="button" class="btn btn-default btn-sm" onclick='jsonRefresh();'>
-         	 			<span class="glyphicon glyphicon-refresh"></span> Refresh
-        			</button>          
-				</div>
-				<textarea class="form-control" rows="10" id="jsonData_in"></textarea>
-			</div> 
-			</div>
-		</div>
+		<div class="row" id="jsonData" style="display: none"></div>
 		
 		<div class="well" align="center">
 			<h6>@EdFasano70 2018 | All Rights Reserved</h6>

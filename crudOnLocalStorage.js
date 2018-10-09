@@ -1,3 +1,14 @@
+//Localdata
+
+function checkLocalData(){
+	localData=JSON.parse(localData);
+	localData.appTitle=localData.appTitle||'C.R.U.D. OPERATION ON LOCAL STORAGE TABLE';
+	document.title=localData.appTitle;
+	localData.database=localData.database||"Test Database";
+	localData.table=localData.table||[{name:"table 1",data:[["ID","NAME"]]},{name:"table 2",data:[["ID","NAME2"]]}];
+	console.log("localData: "+JSON.stringify(localData));
+}
+
 //CRUD Functions
 
 function getFormParams(){
@@ -22,7 +33,7 @@ function update_value(){
 	bootbox.confirm({
 		size:'small',
 		message:"Are you sure?",
-		callback: function(result){ /* your callback code  */ 
+		callback: function(result){ 
 			if(result==true){
 				var insertData=getFormParams();
 				var tempData=[];
@@ -41,21 +52,21 @@ function update_value(){
 					console.log('nuevo registro incorporado');
 				} 
 				localData.table[tablePointer].data=tempData;
-				read_value();
+				refresh();
 			}
 		}
 	});
 }
 
-function read_value() {
+function refresh(){
 	$("#form").hide();
 	$("#loader").show();
 	setTimeout('$("#loader").hide();',1000);
 	$('#formTitle').html('<span class="glyphicon glyphicon-cog" onclick="jsonDataToggle();"></span>  '+localData.database+" : "+localData.table[tablePointer].name);
 	$("#table").html(createTable(localData.table[tablePointer]));
 	$("#form").html(createForm(localData.table[tablePointer]));
+	$('#jsonData').html(createJsonDisplay);
 	$('#tableSelector').html(createTableSelector());
-
 	localStorage.setItem(localStorageName,JSON.stringify(localData));
 	$("#jsonData_in").val(JSON.stringify(localData,null,'\t'));
 	$("#table").show();
@@ -80,7 +91,7 @@ function delete_value(){
 					}
 				}
 				localData.table[tablePointer].data=tempData;
-				read_value();
+				refresh(); 
 			}
 		}
 	});
@@ -97,7 +108,7 @@ function jsonSave(){
 				localStorage.setItem(localStorageName,$("#jsonData_in").val());
 				localData=localStorage.getItem(localStorageName)||JSON.stringify({});
 				checkLocalData();
-				displayData();	
+				refresh();	
 			}
 		}
 	});
@@ -112,7 +123,7 @@ function jsonResetValues(){
 				localStorage.setItem(localStorageName,JSON.stringify({}));
 				localData=localStorage.getItem(localStorageName);
 				checkLocalData();
-				displayData();	
+				refresh();	
 			}
 		}
 	});
@@ -185,7 +196,7 @@ function formButtonList(){
 	$("#table").show();
 }
 function formButtonSave(){
-	update_value();	
+	update_value();
 }
 function formButtonDelete(){
 	delete_value();
@@ -229,7 +240,7 @@ function createForm(table){
 
 function tableSelectorChange(){
 	tablePointer=$('#tableSelector option:selected').attr('id');
-	read_value();
+	refresh(); //read_value();
 }
 
 function createTableSelector(){
@@ -256,4 +267,36 @@ function jsonDataToggle(){
 	        }
 	    });
 	}
+}
+
+function createJsonDisplay(){
+	var html=`
+		<div class="col-sm-12">
+		<div class="form-group">
+			<h3>Database Raw Data (JSON format)     <span class="glyphicon glyphicon-eye-close" onclick='$("#jsonData").toggle();'></span></h3>
+			<div class="btn-group">
+				<button type="button" id="jsonResetValues" class="btn btn-default btn-sm" onclick="jsonResetValues();">
+					<span class="glyphicon glyphicon-erase"></span> Reset
+				</button>
+				<button type="button" id="jsonSave" class="btn btn-default btn-sm" onclick="jsonSave();">
+					<span class="glyphicon glyphicon-save"></span> Save
+				</button>
+				<button type="button" class="btn btn-default btn-sm">
+					<span class="glyphicon glyphicon-export"></span> Backup
+				</button>
+				<button type="button" class="btn btn-default btn-sm">
+					<span class="glyphicon glyphicon-import"></span> Restore
+				</button>					
+				<button type="button" class="btn btn-default btn-sm" onclick="jsonCopy();">
+					<span class="glyphicon glyphicon-copy"></span> Copy
+				</button>
+            	<button type="button" class="btn btn-default btn-sm" onclick='jsonRefresh();'>
+     	 			<span class="glyphicon glyphicon-refresh"></span> Refresh
+    			</button>          
+			</div>
+			<textarea class="form-control" rows="10" id="jsonData_in"></textarea>
+		</div> 
+		</div>
+	`;
+	return html;
 }

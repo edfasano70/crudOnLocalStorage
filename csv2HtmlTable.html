@@ -5,21 +5,26 @@
   <title>Document</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script>
-    function csvJSON(csv,separator){
+    function csv2HtmlTable(csv,separator){
       separator=separator||";";
-      var lines=csv.split("\n");
-        var result=[];
-        for(i=0;i<lines.length;i++){
-          result.push(lines[i].split(separator));
+      var rows=csv.split("\n");
+        var result='<table border="3">';
+        for(i=0;i<rows.length;i++){
+          var cells=rows[i].split(separator);
+          result+='<tr>';
+          for(j=0;j<cells.length;j++){
+            result+='<td>'+cells[j]+'</td>';
+          }
+          result+='</tr>'
         }
+        result+='</table>';
         return result;
-}   
+    }   
 
 </script>
 </head>
 <body>
-  <button onclick="$('#inp2').val(JSON.stringify(csvJSON($('#inp1').val(),';')));">convertir</button>
-
+  <button onclick="$('#inp2').val(csv2HtmlTable($('#inp1').val(),';'));">convertir</button>
 <div class="form-group">
   <label for="inp1">Entrada:</label>
   <textarea class="form-control" rows="5" id="inp1"></textarea>

@@ -108,11 +108,8 @@ function jsonSave(){
 				localStorage.setItem(localStorageName,$("#jsonData_in").val());
 				localData=localStorage.getItem(localStorageName)||JSON.stringify({});
 				checkLocalData();
-<<<<<<< HEAD
 				refresh();	
-=======
-				read_value();	
->>>>>>> ba443fd7b6175eb8583f0cb7a5bee7bef0a56dbf
+				//read_value();	
 			}
 		}
 	});
@@ -127,11 +124,8 @@ function jsonResetValues(){
 				localStorage.setItem(localStorageName,JSON.stringify({}));
 				localData=localStorage.getItem(localStorageName);
 				checkLocalData();
-<<<<<<< HEAD
 				refresh();	
-=======
-				read_value();	
->>>>>>> ba443fd7b6175eb8583f0cb7a5bee7bef0a56dbf
+//				read_value();	
 			}
 		}
 	});
@@ -276,7 +270,6 @@ function jsonDataToggle(){
 	    });
 	}
 }
-<<<<<<< HEAD
 
 function createJsonDisplay(){
 	var html=`
@@ -309,5 +302,3 @@ function createJsonDisplay(){
 	`;
 	return html;
 }
-=======
->>>>>>> ba443fd7b6175eb8583f0cb7a5bee7bef0a56dbf
